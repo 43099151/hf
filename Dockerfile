@@ -1,12 +1,15 @@
-# VPS for Hugging Face Spaces with Tailscale + R2 Backup
 FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y \
-    ca-certificates curl wget vim git supervisor nginx php8.2-fpm php8.2-cli \
-    php8.2-json php8.2-curl php8.2-mbstring php8.2-xml php8.2-zip openssh-server \
-    rclone build-essential \
+# 添加 PHP 8.2 源
+RUN apt-get update && apt-get install -y software-properties-common ca-certificates \
+    && echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
+    && apt-get update
+
+RUN apt-get install -y \
+    curl wget vim git supervisor nginx php8.2-fpm php8.2-cli php8.2-json php8.2-curl \
+    php8.2-mbstring php8.2-xml php8.2-zip openssh-server rclone build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # ---------- 安装 Tailscale ----------
