@@ -7,8 +7,8 @@ if ! rclone listremotes | grep -q "^r2:"; then
 fi
 
 echo "=== Backup to R2 ==="
-rclone sync /srv/data r2:${R2_BUCKET}/data
-rclone sync /srv/conf r2:${R2_BUCKET}/conf
-rclone sync /srv/www  r2:${R2_BUCKET}/www
-rclone sync /var/lib/tailscale r2:${R2_BUCKET}/tailscale
+rclone sync /srv/data r2:${R2_BUCKET}/hf-vps/data
+rclone sync /srv/conf r2:${R2_BUCKET}/hf-vps/conf
+rclone sync /srv/www  r2:${R2_BUCKET}/hf-vps/www
+rclone sync /var/lib/tailscale r2:${R2_BUCKET}/hf-vps/tailscale
 echo "Backup completed"
