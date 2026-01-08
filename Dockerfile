@@ -15,13 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 安装 Tailscale（官方脚本方式）
 RUN curl -fsSL https://tailscale.com/install.sh | sh
 
-# 安装轻量 SOCKS5：microsocks
-RUN git clone https://github.com/rofl0r/microsocks.git /opt/microsocks \
-    && cd /opt/microsocks \
-    && make \
-    && cp microsocks /usr/local/bin/microsocks \
-    && rm -rf /opt/microsocks
-
 # 目录
 RUN mkdir -p /var/run/sshd /var/log/supervisor /srv/www /srv/data /srv/conf /scripts \
     /var/lib/tailscale /root/.config/rclone \
