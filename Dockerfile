@@ -26,6 +26,7 @@ RUN sed -ri 's/^#?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config &
 
 # 配置文件
 COPY nginx/default.conf /etc/nginx/sites-available/default
+COPY nginx/site_template.conf /etc/nginx/conf.d/site.template
 COPY php/php.ini /etc/php/*/fpm/php.ini
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
