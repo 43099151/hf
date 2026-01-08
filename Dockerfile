@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 1) 系统包：同一层 update + install（更稳）[web:311]
 # 2) PHP 用 php-fpm（默认版本），避免版本路径坑 [web:307]
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates curl wget vim git \
+    ca-certificates curl wget vim git rsync \
     supervisor nginx \
     php-fpm php-cli php-json php-curl php-mbstring php-xml php-zip \
     openssh-server rclone \
