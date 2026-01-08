@@ -8,11 +8,11 @@ fi
 
 PREFIX="${R2_PREFIX:-hf-vps}"
 
-echo "=== Backup to r2:${R2_BUCKET}/${PREFIX} ==="
+echo "=== Backup to r2:hf--backups/${PREFIX} ==="
 
-rclone sync /srv/data "r2:${R2_BUCKET}/${PREFIX}/data"
-rclone sync /srv/conf "r2:${R2_BUCKET}/${PREFIX}/conf"
-rclone sync /srv/www  "r2:${R2_BUCKET}/${PREFIX}/www"
-rclone sync /var/lib/tailscale "r2:${R2_BUCKET}/${PREFIX}/tailscale"
+rclone sync /srv/data "r2:hf--backups/${PREFIX}/data"
+rclone sync /srv/conf "r2:hf--backups/${PREFIX}/conf"
+rclone sync /srv/www  "r2:hf--backups/${PREFIX}/www"
+rclone sync /var/lib/tailscale "r2:hf--backups/${PREFIX}/tailscale"
 
 echo "Backup completed"
