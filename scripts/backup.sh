@@ -2,34 +2,38 @@
 set -e
 
 if ! rclone listremotes | grep -q "^r2:"; then
-  echo "r2 remote not configured, skip restore"
+  echo "r2 remote not configured, skip backup"
   exit 0
 fi
 
 PREFIX="${R2_PREFIX:-hf-vps}"
 
-echo "=== Restoring core data from r2:hf--backups/${PREFIX} ==="
+echo "=== Backup to r2:hf--backups/${PREFIX} ==="
 
-rclone sync "r2:hf--backups/${PREFIX}/data" /srv/data || true
-rclone sync "r2:hf--backups/${PREFIX}/conf" /srv/conf || true
-rclone sync "r2:hf--backups/${PREFIX}/www" /srv/www || true
-rclone sync "r2:hf--backups/${PREFIX}/tailscale" /var/lib/tailscale || true
+# 1. 备份关键配置到 /srv/conf (暂存区)
+echo "Snapshoting configurations..."
+mkdir -p /srv/conf/supervisor /srv/conf/nginx
 
-echo "Applying restored configurations..."
-
-# 1. Supervisord
-if [ -f /srv/conf/supervisor/supervisord.conf ]; then
-    echo "Restoring supervisord.conf..."
-    cp /srv/conf/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+# Supervisord
+if [ -f /etc/supervisor/conf.d/supervisord.conf ]; then
+    cp /etc/supervisor/conf.d/supervisord.conf /srv/conf/supervisor/supervisord.conf
 fi
 
-# 2. Nginx
-if [ -d /srv/conf/nginx/conf.d ]; then
-    echo "Restoring nginx configs..."
-    cp -r /srv/conf/nginx/conf.d/* /etc/nginx/conf.d/ || true
+# Nginx
+# 备份 conf.d 和 sites-enabled (如果用了 enabled 模式)
+if [ -d /etc/nginx/conf.d ]; then
+    rsync -av --delete /etc/nginx/conf.d/ /srv/conf/nginx/conf.d/
 fi
-# if [ -d /srv/conf/nginx/sites-enabled ]; then
-#     cp -r /srv/conf/nginx/sites-enabled/* /etc/nginx/sites-enabled/ || true
+# 如果你也用了 sites-enabled，可以把下面注释打开
+# if [ -d /etc/nginx/sites-enabled ]; then
+#     rsync -av --delete /etc/nginx/sites-enabled/ /srv/conf/nginx/sites-enabled/
 # fi
 
-echo "Restore completed"
+echo "Config snapshot done."
+
+rclone sync /srv/data "r2:hf--backups/${PREFIX}/data"
+rclone sync /srv/conf "r2:hf--backups/${PREFIX}/conf"
+rclone sync /srv/www  "r2:hf--backups/${PREFIX}/www"
+rclone sync /var/lib/tailscale "r2:hf--backups/${PREFIX}/tailscale"
+
+echo "Backup completed"
