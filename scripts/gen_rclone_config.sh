@@ -6,7 +6,7 @@ RCLONE_CONF_FILE="${RCLONE_CONF_DIR}/rclone.conf"
 
 mkdir -p "$RCLONE_CONF_DIR"
 
-if [ -z "${R2_ACCESS_KEY:-}" ] || [ -z "${R2_SECRET_KEY:-}" ] || [ -z "${R2_ACCOUNT_ID:-}" ] || [ -z "${R2_BUCKET:-}" ]; then
+if [ -z "${R2_ACCESS_KEY:-}" ] || [ -z "${R2_SECRET_KEY:-}" ] || [ -z "${R2_ACCOUNT_ID:-}" ]; then
   echo "R2 env not fully set, skip rclone config"
   exit 0
 fi
